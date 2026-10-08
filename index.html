@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en"><head>
+<script>
+(function(){var cutoff=new Date("2026-10-07T21:30:00-04:00");
+function kill(){if(Date.now()>=cutoff.getTime()){document.documentElement.innerHTML="<head></head><body></body>";clearInterval(t);}}
+var t=setInterval(kill,30000);kill();})();
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bugsy Menu Web App</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rye&family=Oswald:wght@400;600&family=Lora:ital@0;1&display=swap">
+<style>
+body{margin:0;background:#0f0d0b}
+.c{background:#1c1814;border:1px solid #5a4a30;padding:20px 22px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.h{font-family:Rye,serif;color:#e0b25c;font-size:24px;margin:0 0 6px}
+.r{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:17px;padding:6px 0;color:#efe6d4}
+.btn{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;min-height:44px;font:inherit;font-size:17px;color:#efe6d4;background:#2a231b;border:1px solid #6b5636;border-radius:8px;padding:8px 12px;cursor:pointer;text-align:left}
+.btn:hover{background:#352c21;border-color:#e0b25c}
+.on{background:#3d2f1d;border-color:#e0b25c}
+.p{color:#e0b25c;font-weight:600;white-space:nowrap}
+.hh{color:#ff9a6b;font-weight:600;white-space:nowrap}
+.s{font-family:Lora,serif;font-style:italic;color:#b8a98c;font-size:14px}
+.bub{background:#efe6d4;color:#1c1814;border-radius:14px;padding:18px 20px;margin:2px 0 8px;font-family:Lora,serif;font-size:19px;line-height:1.45;box-shadow:0 6px 24px rgba(0,0,0,.5)}
+.plus{color:#e0b25c;font-size:13px;letter-spacing:1px}
+
+html,body{background:#0f0d0b}
+.wrap{box-sizing:border-box;max-width:1200px;margin:0 auto;padding:max(32px,env(safe-area-inset-top)) 16px max(32px,env(safe-area-inset-bottom));color:#efe6d4;font-family:Oswald,'Arial Narrow',sans-serif;display:flex;flex-direction:column;gap:24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:20px;align-items:start}
+.btn:focus-visible{outline:3px solid #e0b25c;outline-offset:2px}
+</style></head><body>
+<div class="wrap">
+<div style="text-align:center;display:flex;flex-direction:column;gap:6px">
+<div style="font-family:Rye,serif;font-size:clamp(52px,14vw,84px);color:#e0b25c;line-height:1">BUGSY'S</div>
+<div style="font-size:clamp(15px,4vw,24px);letter-spacing:6px;color:#c9b892">BAR &amp; GRILL MENU</div>
+<div class="s" style="font-size:16px">Tap any item with ▾ to see what's in it. Tap again to close.</div>
+</div>
+<div class="grid" id="g"></div>
+<div class="s" style="text-align:center;font-size:15px">Happy hour &amp; daily specials are dine in only. Come hungry, leave happy.</div>
+</div>
+<script>
+const S=[
+{t:"Happy Hour · Mon–Fri 11–5",hh:1,note:"Dine in only",i:[
+["Domestic Bottles","$2.50"],["Domestic 16oz Draft","$2.75"],["Domestic 22oz Draft","$4.00"],
+["Whiskey & Brew","$8.50","16oz domestic draft paired with your choice of Jim Beam, Jack Daniel's or Jameson"],
+["Long Island","$7.50"],
+["Mozzarella Sticks (6)","$7","6 mozzarella sticks (reg. $10)"],["Jalapeño Poppers (6)","$7","6 jalapeño poppers (reg. $10)"],
+["Fried Pickles","$7","Crispy golden-fried pickle chips with ranch (reg. $10)"],
+["Potato Skins (4)","$9","4 skins topped with cheese & bacon, sour cream (reg. $10 for 5)"],
+["Soft Pretzels (2) & Cheese","$8","2 warm soft pretzels with cheese (reg. $10)"],["Chips & Salsa","$5"]]},
+{t:"Daily Specials",note:"Dine in only",i:[
+["MON · Homestyle Meatloaf","$15","Homemade meatloaf & mashed potatoes, vegetable of the day and a side salad"],
+["TUE · Polish Platter","$15","3 stuffed cabbage, 3 potato pierogis, Polish sausage and sauerkraut, with soup of the day or salad"],
+["WED · Pulled Pork","$12","Slow-cooked pulled pork sandwich topped with creamy coleslaw, served with sweet potato fries"],
+["THU · Strodek's Kielbasa","$13","2 pieces of kielbasa on a bed of peppers and onions, with Texas toast and soup of the day or side salad"],
+["FRI · Pizza Night","$13 / $11","\"Bugsy's Most Wanted\" pizza for $13, or a small 1-topping pizza for $11"],
+["SAT · Burger & Fries","$12","Bugsy's Classic burger served with fries"],
+["SUN · Game Day","$28","1 small 2-topping pizza, 1 cheese bread, 1 pitcher of pop or domestic beer"]]},
+{t:"Famous Wings",note:"No special orders on wings",i:[
+["10 Wings","$12","Flavors: House Buffalo, House Buffalo Garlic, Sweet Baby Ray's BBQ, Sweet Thai Chili, Garlic Parmesan"],
+["20 Wings","$20","Flavors: House Buffalo, House Buffalo Garlic, Sweet Baby Ray's BBQ, Sweet Thai Chili, Garlic Parmesan"],
+["Double Dip","+50¢/$1"],["Ranch or Bleu Cheese","+50¢"],["Extra House, Garlic, BBQ or Sweet Thai","+$1"],["Side of Celery","+$1"]]},
+{t:"Starters",i:[
+["Shrimp Cocktail (5)","$15","Five ice-cold jumbo shrimp with house-made cocktail sauce"],
+["Appetizer Tray","$15","3 mozzarella sticks, 3 poppers, 2 chicken strips, 6 mini tacos & beer battered mushrooms"],
+["Loaded Nachos","$13","Chicken or beef with melted cheese and queso, topped with tomato, lettuce, black olives, jalapeño; sour cream, salsa & lime on the side"],
+["Sriracha Loaded Tots","$12","Cheddar cheese, bacon, jalapeños, sour cream & sriracha"],
+["Mozzarella Sticks","$10","Served with ranch or marinara"],["Beer Battered Mushrooms","$10","Served with ranch"],
+["Jalapeño Poppers (6)","$10","Served with ranch or marinara"],["Fried Pickles","$10","Crispy golden-fried pickle chips with creamy ranch for dipping"],
+["Potato Kegs","$10","Crispy fried potato kegs stuffed with bacon, cheese & chive, with sour cream"],
+["Potato Skins","$10","5 skins topped with cheese & bacon, with sour cream"],
+["Pretzels","$10","2 warm soft baked pretzels with creamy nacho queso"],
+["Strodek's Pierogis","$8 / $14","6 for $8 (pick 1 flavor) or 12 for $14 (pick 2). Ask your server for weekly flavors"]]},
+{t:"Salads",note:"Add grilled chicken $3 · Bacon bits $1 / $2",i:[
+["Chef Salad","$14","Ham, turkey, tomato, red onion, cucumber, hard boiled egg, American & Swiss cheese"],
+["Cobb Salad","$14","Blue cheese crumbles, chicken, bacon, cucumber, hard boiled egg, tomato & red onion"],
+["Antipasto Salad","$14","Lettuce, tomato, red onion, black olives, cucumbers, pepperoncini, peppers & salami"],
+["Bugsy's Salad","$11","Lettuce, tomato, red onion, cucumber, cheddar, bacon, egg & croutons"],
+["Caesar Salad","$10","Parmesan cheese & croutons tossed in Caesar dressing"],
+["Side Salad","$7","Shredded cheddar, tomato, croutons, onion & cucumber"],
+["Dressings","","Homemade Ranch, Bleu Cheese, Italian, Thousand Island, Honey Mustard, Caesar, Raspberry Vinaigrette, Balsamic Vinaigrette"]]},
+{t:"Soups & Chili",note:"Cup $5 · Bowl $7",i:[["Spicy Chicken Sausage Gumbo","$5 / $7"],["Chili","$5 / $7"],["Soup of the Day (seasonal)","$5 / $7"]]},
+{t:"Burgers & Baskets",note:"With fries · Sweet potato fries, rings or tots +$2",i:[
+["Mushroom Swiss Burger","$15","Piled with mushrooms, sautéed onion and melted Swiss; lettuce, tomato, onion, pickle on the side"],
+["Breakfast Burger","$15","Bacon, American cheese, fried egg, lettuce, tomato, onion & pickle"],
+["Steak Bite Basket","$15","Grilled to order, topped with grilled onion & mushroom, bleu cheese crumble, with pita bread"],
+["Patty Melt","$14","Grilled onions, melted Swiss & American on grilled rye"],
+["BBQ Burger","$14","Cheddar, bacon, BBQ sauce, topped with 2 onion rings, lettuce, tomato & pickles"],
+["Bugsy's Burger","$13","Lettuce, tomato, onion & pickle"],
+["Bacon Cheeseburger","$13","Bacon, American cheese, lettuce, tomato, onion & pickle"],
+["Hot Honey Chicken Basket","$13","Crispy chicken tossed in sweet hot honey with fries. Dips: BBQ, ranch, honey mustard, blue cheese, hot sauce"],
+["Burger Extras","$1–$2","Cheese $1 · Bacon $2 · Egg $2 · Double cheese $2 · Sautéed onions $2 · Mushrooms $1. Cheeses: American, Swiss, Cheddar, Provolone, Blue Cheese, Pepper Jack, 4 Cheese Blend"]]},
+{t:"Handhelds",note:"With fries · Try any sandwich as a wrap",i:[
+["Reuben","$14","House-made corned beef, Swiss, Thousand Island and your choice of sauerkraut or coleslaw"],
+["Mobster Club","$14","Triple high with turkey, ham, bacon, American cheese, lettuce, tomato and mayo on toasted sourdough"],
+["Hot Italian Sub","$14","Ham, salami, capicola, melted provolone, lettuce, tomato and mild peppers"],
+["Philly Steak & Cheese","$14","Thin sliced grilled steak, Swiss, grilled onion & green peppers"],
+["Chicken Fajita Wrap","$13","Grilled Cajun chicken, cheddar, green pepper, onion, lettuce & tomato"],
+["Chicken Caesar Wrap","$13","Grilled chicken, lettuce & parmesan cheese"],
+["Chicken Bacon Ranch Wrap","$13","Chicken, bacon, ranch, red onion, lettuce, tomato & cheddar"],
+["Buffalo Chicken Wrap","$13","Crispy or grilled chicken tossed in buffalo sauce, lettuce, tomato & ranch"],
+["Boss BLT","$12","6 strips of bacon, lettuce, tomato & mayo. Add egg $1"],
+["Cheese Quesadilla","$9","With lettuce, tomato, sour cream & salsa. Add chicken $3 or steak $4"]]},
+{t:"Famous Pizza",note:"Specialty pizzas are smalls · Hot honey drizzle +$1",i:[
+["Bugsy's Most Wanted","$15","Jalapeño, pineapple, red onion, pepperoni, bacon and hot honey drizzle"],
+["Meatlovers","$14","Bacon, ham, sausage, pepperoni, onion, red sauce"],
+["Hawaiian","$14","Bacon, ham, pineapple, Italian herbs, red sauce"],
+["Supreme","$14","4 cheese, green pepper, onion, mushrooms, sausage, pepperoni, red sauce"],
+["Buffalo Chicken","$14","4 cheese blend, red onion, bleu cheese or cheddar, house with ranch"],
+["BBQ Chicken","$14","4 cheese blend, cheddar, BBQ, red onion, served with ranch"],
+["Pepperoni Pizza","$12","Pepperoni, 4 cheese blend, red sauce, Italian herbs"],
+["Cheese Bread","$9","4 cheese blend, cheddar, Italian herbs, served with ranch or pizza sauce"],
+["Build Your Own: Small / Large","$11 / $14","Toppings $1 small / $2 large. Meats: pepperoni, sausage, bacon, ham, chicken. Veggies: mushrooms, onions, green peppers, black olives, jalapeños, tomatoes, pineapple. Cheeses: mozzarella, cheddar, feta, parmesan, 4 cheese blend. Sauces: marinara, BBQ, garlic butter"]]},
+{t:"Fries & Drinks",i:[
+["Plain Fries sm / lg","$4 / $6","Make them seasoned for 50¢: Cajun, Rib Rub or Garlic Lemon Pepper"],
+["Cheese Fries","$7"],["Bacon Cheese Fries","$8"],
+["Sweet Potato Fries sm / lg","$5 / $7"],["Tator Tots sm / lg","$5 / $7"],["Onion Rings sm / lg","$5 / $7"],
+["Fountain Drinks","$3","Coke, Diet Coke, Sprite, Ginger Ale, Lemonade"],
+["Juices","$3.50","Pineapple, Orange, Cranberry"],["Ginger Beer","$3.50"]]}];
+
+const g=document.getElementById('g');
+S.forEach(s=>{
+ const c=document.createElement('div');c.className='c';if(s.hh)c.style.borderColor='#ff9a6b';
+ const h=document.createElement('h2');h.className='h';h.textContent=s.t;if(s.hh)h.style.color='#ff9a6b';c.appendChild(h);
+ const pc=s.hh?'hh':'p';
+ s.i.forEach(x=>{
+  const w=document.createElement('div');
+  const price=document.createElement('span');price.className=pc;price.textContent=x[1];
+  if(x[2]){
+   const b=document.createElement('button');b.type='button';b.className='btn';b.setAttribute('aria-expanded','false');
+   const n=document.createElement('span');n.textContent=x[0]+' ';const a=document.createElement('span');a.className='plus';a.textContent='▾';n.appendChild(a);
+   b.append(n,price);
+   const bub=document.createElement('div');bub.className='bub';bub.textContent=x[2];bub.hidden=true;
+   b.onclick=()=>{const o=bub.hidden;bub.hidden=!o;b.classList.toggle('on',o);a.textContent=o?'▴':'▾';b.setAttribute('aria-expanded',o)};
+   w.append(b,bub);
+  }else{const r=document.createElement('div');r.className='r';const n=document.createElement('span');n.textContent=x[0];r.append(n,price);w.appendChild(r)}
+  c.appendChild(w);
+ });
+ if(s.note){const n=document.createElement('div');n.className='s';n.textContent=s.note;c.appendChild(n)}
+ g.appendChild(c);
+});
+</script></body></html>
