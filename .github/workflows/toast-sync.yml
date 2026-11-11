@@ -1,0 +1,22 @@
+name: Toast menu sync
+on:
+  schedule: [{cron: '0 9 * * *'}]   # nightly, ~4-5am Michigan time
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 20}
+      - run: node tools/toast-sync.mjs
+        env:
+          TOAST_CLIENT_ID: ${{ secrets.TOAST_CLIENT_ID }}
+          TOAST_CLIENT_SECRET: ${{ secrets.TOAST_CLIENT_SECRET }}
+          TOAST_RESTAURANT_GUID: ${{ secrets.TOAST_RESTAURANT_GUID }}
+      - run: |
+          if [ -f toast-menu.json ] && [ -n "$(git status --porcelain toast-menu.json)" ]; then
+            git config user.name "toast-sync"; git config user.email "actions@users.noreply.github.com"
+            git add toast-menu.json && git commit -m "Sync menu from Toast" && git push
+          fi
