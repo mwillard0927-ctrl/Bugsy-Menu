@@ -29,9 +29,15 @@ html,body{background:#0f0d0b}
 .wrap{box-sizing:border-box;max-width:1200px;margin:0 auto;padding:max(32px,env(safe-area-inset-top)) 16px max(32px,env(safe-area-inset-bottom));color:#efe6d4;font-family:Oswald,'Arial Narrow',sans-serif;display:flex;flex-direction:column;gap:24px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:20px;align-items:start}
 .btn:focus-visible{outline:3px solid #e0b25c;outline-offset:2px}
+.hdr{position:relative}
+#qrBtn{position:absolute;top:0;right:0;width:16.667%;aspect-ratio:1;padding:0;border:0;background:#fff;border-radius:6px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#qrBtn img{width:100%;height:100%;display:block;border-radius:6px}
+#qrShade{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;z-index:50}
+#qrBig{position:fixed;z-index:51;border-radius:6px;background:#fff;transform-origin:0 0;display:none;cursor:pointer}
 </style></head><body>
 <div class="wrap">
-<div style="text-align:center;display:flex;flex-direction:column;gap:6px">
+<div class="hdr" style="text-align:center;display:flex;flex-direction:column;gap:6px">
+<button id="qrBtn" aria-label="Show QR code"><img src="qr.png" alt="QR code"></button>
 <div style="font-family:Rye,serif;font-size:clamp(52px,14vw,84px);color:#e0b25c;line-height:1">BUGSY'S</div>
 <div style="font-size:clamp(15px,4vw,24px);letter-spacing:6px;color:#c9b892">BAR &amp; GRILL MENU</div>
 <div class="s" style="font-size:16px">Tap any item with ▾ to see what's in it. Tap again to close.</div>
@@ -141,4 +147,17 @@ S.forEach(s=>{
  g.appendChild(c);
 });
 </script><script>if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js")</script>
+<div id="qrShade"></div><img id="qrBig" src="qr.png" alt="QR code">
+<script>
+(()=>{const b=document.getElementById('qrBtn'),sh=document.getElementById('qrShade'),big=document.getElementById('qrBig');let open=false,busy=false;
+function place(){const r=b.getBoundingClientRect();big.style.left=r.left+'px';big.style.top=r.top+'px';big.style.width=r.width+'px';big.style.height=r.height+'px';return r}
+function target(r){const s=Math.min(innerWidth,innerHeight)*0.94;const k=s/r.width;return `translate(${(innerWidth-s)/2-r.left}px,${(innerHeight-s)/2-r.top}px) scale(${k})`}
+b.onclick=()=>{if(open||busy)return;busy=true;const r=place();big.style.transition='none';big.style.transform='none';big.style.display='block';b.style.visibility='hidden';sh.style.pointerEvents='auto';
+big.offsetWidth;const t='transform 1.5s cubic-bezier(.4,0,.2,1)';big.style.transition=t;sh.style.transition='opacity 1.5s ease';big.style.transform=target(r);sh.style.opacity='1';
+setTimeout(()=>{open=true;busy=false},1500)};
+function close(){if(!open||busy)return;busy=true;place();big.style.transition='transform .5s cubic-bezier(.4,0,.2,1)';sh.style.transition='opacity .5s ease';big.style.transform='none';sh.style.opacity='0';
+setTimeout(()=>{big.style.display='none';b.style.visibility='';sh.style.pointerEvents='none';open=false;busy=false},500)}
+sh.onclick=close;big.onclick=close;
+addEventListener('resize',()=>{if(open){big.style.transition='none';big.style.transform=target(place())}})})();
+</script>
 </body></html>
