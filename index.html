@@ -72,6 +72,7 @@ body{position:relative}
 <a id="callBtn" href="#" hidden>📞 CALL</a>
 <a id="dirBtn" href="#" target="_blank" rel="noopener" hidden>📍 DIRECTIONS</a>
 <button id="hrsBtn" type="button" hidden>🕒 HOURS</button>
+<button id="instBtn" type="button" hidden>📲 GET THE APP</button>
 </div>
 <div id="hrs" hidden></div>
 <div id="hhBanner" class="banner hhon" hidden></div>
@@ -170,5 +171,12 @@ function close(){if(!open||busy)return;busy=true;place();big.style.transition='t
 setTimeout(()=>{big.style.display='none';b.style.visibility='';sh.style.pointerEvents='none';open=false;busy=false},500)}
 sh.onclick=close;big.onclick=close;
 addEventListener('resize',()=>{if(open){big.style.transition='none';big.style.transform=target(place())}})})();
+</script>
+<script>
+// Stop Chrome's automatic "Install app" pop-up; offer a quiet button instead
+let deferredInstall=null;
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;document.getElementById('instBtn').hidden=false});
+document.getElementById('instBtn').onclick=async()=>{if(!deferredInstall)return;deferredInstall.prompt();await deferredInstall.userChoice;deferredInstall=null;document.getElementById('instBtn').hidden=true};
+addEventListener('appinstalled',()=>{document.getElementById('instBtn').hidden=true});
 </script>
 </body></html>
