@@ -3,7 +3,7 @@
 //   ADMIN_PIN      the PIN you and the owner type in
 //   GEMINI_API_KEY from aistudio.google.com → Get API key
 //   GITHUB_TOKEN   fine-grained token with Contents: Read & write on mwillard0927-ctrl/Bugsy-Menu
-//   GEMINI_MODEL   optional, defaults to gemini-2.5-flash
+//   GEMINI_MODEL   optional, defaults to gemini-3.8-flash
 const REPO = "mwillard0927-ctrl/Bugsy-Menu";
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -63,7 +63,7 @@ Rules:
 Also include a top-level "notes" string (one or two sentences) describing anything unclear.
 CURRENT MENU:
 ${JSON.stringify(menu)}`;
-      const model = env("GEMINI_MODEL") || "gemini-2.5-flash";
+      const model = env("GEMINI_MODEL") || "gemini-3.8-flash";
       const r = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${env("GEMINI_API_KEY")}`,
         {
